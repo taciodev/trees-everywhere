@@ -34,6 +34,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,7 +79,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DB_ENGINE', 'CHANGE-ME'),
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
         'NAME': os.getenv('POSTGRES_DB', 'CHANGE-ME'),
         'USER': os.getenv('POSTGRES_USER', 'CHANGE-ME'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'CHANGE-ME'),
