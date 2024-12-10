@@ -1,31 +1,33 @@
-FROM python:3.11.3-alpine3.18
+FROM python:3.11-slim-bullseye
 LABEL maintainer="taciano.dev@outlook.com"
 
-# Define variáveis de ambiente
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# Define o diretório de trabalho
 WORKDIR /app
 
-# Copia todos os arquivos do projeto para o contêiner
-COPY . .
+COPY requirements.txt ./
 
-# Instala dependências no ambiente global
-RUN apk add --no-cache netcat-openbsd && \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    netcat-openbsd \
+    gcc \
+    libffi-dev \
+    musl-dev && \
     pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt && \
-    adduser --disabled-password --no-create-home duser && \
+    apt-get purge -y --auto-remove gcc libffi-dev musl-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY . .
+
+RUN useradd --no-create-home duser && \
     mkdir -p /data/web/static /data/web/media && \
     chown -R duser:duser /app /data/web/static /data/web/media && \
-    chmod -R 755 /data/web/static /data/web/media && \
-    chmod -R 755 /app/scripts
+    chmod -R 700 /data/web/static /data/web/media && \
+    chmod +x /app/scripts/commands.sh
 
-# Muda para o usuário criado
 USER duser
 
-# Expondo a porta 8000 para conexões externas
 EXPOSE 8000
 
-# Define o comando de inicialização
-CMD ["scripts/commands.sh"]
+CMD ["sh", "scripts/commands.sh"]
