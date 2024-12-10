@@ -33,4 +33,4 @@ class UserAccount(models.Model):
         verbose_name_plural = 'Usuários'
 
     def __str__(self):
-        return f"{self.user.username} - {self.account.name}"
+        return self.user.username
