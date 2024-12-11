@@ -1,27 +1,25 @@
 from django.contrib import admin
-from .models import Tree, PlantedTree
+from .models import Tree
+from accounts.models import PlantedTree
+
+
+class PlantedTreeInline(admin.TabularInline):
+    """
+    Inline edition of PlantedTree instances.
+    """
+    model = PlantedTree
+    extra = 1
+    readonly_fields = ('user', 'account')
 
 
 class TreeAdmin(admin.ModelAdmin):
     """
-    Customize the admin interface for Tree model.
+    Admin page for Tree instances.
     """
-    list_display = ('name', 'scientific_name')
-    search_fields = ('name',)
+    inlines = [PlantedTreeInline]
+    def planted_trees(self, obj):
+        return ", ".join([pt.user.username for pt in obj.plantedtree_set.all()])
+    planted_trees.short_description = 'Plantadas por'
 
 
 admin.site.register(Tree, TreeAdmin)
-
-
-class PlantedTreeAdmin(admin.ModelAdmin):
-    """
-    Customize the admin interface for PlantedTree model.
-    """
-    list_display = ('age', 'planted_at', 'tree', 'user', 'account')
-    search_fields = ('tree', 'user')
-    list_filter = ('tree',)
-
-    # TODO: LISTAR APENAS AS CONTAS DO USUÁRIO LOGADO
-
-
-admin.site.register(PlantedTree, PlantedTreeAdmin)
