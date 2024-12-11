@@ -1,45 +1,35 @@
-<nav class="navbar navbar-expand-lg border-bottom">
-
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #77c67c;">
     <div class="container-fluid">
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03"
-            aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand text-white" href="{% url 'home' %}">
+            <i class="fas fa-seedling"></i> Plante sua Árvore
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
-        <a class="navbar-brand" href="#">Myapp</a>
-
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Inicio</a>
-                </li> 
-
-                <li class="nav-item">
-                    <a class="nav-link disabled">Desativado</a>
+                    <a class="nav-link text-white" href="{% url 'profile' %}">Perfil</a>
                 </li>
-
-            </ul>
-
-            <div class="d-flex gap-3 align-items-center">
-                {% if user.is_authenticated %}
-                    <span class="nav-text">
-                        {{user.username}}
-                    </span>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'plant_tree' %}">Plantar Árvores</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Visualizar Árvores
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'view_planted_trees' %}">Árvores que Eu Plantei</a></li>
+                        <li><a class="dropdown-item" href="{% url 'view_account_trees' %}">Árvores do Meu Grupo</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
                     <form method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
-                        <button class="btn btn-outline-danger type="submit">Sair</button>
+                        <button type="submit">Sair</button>
                     </form>
-                {% else %}
-                    <a class="btn btn-outline-primary" href="{% url 'login' %}">Entrar</a>
-                {% endif %} 
-
-            </div>
-           
+                </li>
+            </ul>
         </div>
-
     </div>
-
 </nav>
