@@ -4,7 +4,7 @@ from .models import Tree, PlantedTree
 
 class TreeAdmin(admin.ModelAdmin):
     """
-    Customize the administrative interface for the Tree model.
+    Customize the admin interface for Tree model.
     """
     list_display = ('name', 'scientific_name')
     search_fields = ('name',)
@@ -13,14 +13,15 @@ class TreeAdmin(admin.ModelAdmin):
 admin.site.register(Tree, TreeAdmin)
 
 
-# TODO: LISTAR APENAS AS CONTAS DO USUÁRIO LOGADO
 class PlantedTreeAdmin(admin.ModelAdmin):
     """
-    Customizes the administrative interface for the TreeType model.
+    Customize the admin interface for PlantedTree model.
     """
     list_display = ('age', 'planted_at', 'tree', 'user', 'account')
     search_fields = ('tree', 'user')
     list_filter = ('tree',)
+
+    # TODO: LISTAR APENAS AS CONTAS DO USUÁRIO LOGADO
 
 
 admin.site.register(PlantedTree, PlantedTreeAdmin)
