@@ -1,47 +1,45 @@
 from django.contrib import admin
-from django.contrib.auth import forms
-from django.contrib.auth.models import User
-
-from .models import Account, UserAccount
-
-
-class CustomUserCreationForm(forms.UserCreationForm):
-    """
-    User creation form with additional fields.
-    """
-    class Meta(forms.UserCreationForm.Meta):
-        model = User
-        fields = forms.UserCreationForm.Meta.fields + ('email', 'first_name', 'last_name')
-
-    def __init__(self, *args, **kwargs):
-        """
-        Adds 'form-control' class to fields.
-        """
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs.update({'class': 'form-control'})
-
-
-class UserAccountInline(admin.TabularInline):
-    """
-    Inline to associate users with accounts in Admin.
-    """
-    model = UserAccount
-    extra = 1
-
+from .models import Account, User, Profile, PlantedTree
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 class AccountAdmin(admin.ModelAdmin):
     """
-    Custom display of Account model in Admin.
+    Interface administrativa para gerenciar o modelo Account.
+    Permite ativar e desativar contas em massa.
     """
     list_display = ('name', 'created', 'active')
-    inlines = [UserAccountInline]
+    list_filter = ('active',)
+    actions = ['activate_accounts', 'deactivate_accounts']
+
+    def activate_accounts(self, request, queryset):
+        """Ativa as contas selecionadas."""
+        queryset.update(active=True)
+    activate_accounts.short_description = "Ativar contas selecionadas"
+
+    def deactivate_accounts(self, request, queryset):
+        """Desativa as contas selecionadas."""
+        queryset.update(active=False)
+    deactivate_accounts.short_description = "Desativar contas selecionadas"
+
+class UserAdmin(BaseUserAdmin):
+    """
+    Interface administrativa para gerenciar o modelo User.
+    Permite associar usuários a contas usando um filtro horizontal.
+    """
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
+    filter_horizontal = ('accounts',)
 
 
-@admin.register(Account)
-class AccountAdmin(admin.ModelAdmin):
+class PlantedTreeAdmin(admin.ModelAdmin):
     """
-    Registers the Account model in the Admin.
+    Interface administrativa para gerenciar o modelo PlantedTree.
     """
-    list_display = ('name', 'created', 'active')
-    inlines = [UserAccountInline]
+    list_display = ('tree', 'user', 'account', 'age', 'location', 'planted_at')  # Defina os campos a serem exibidos na lista
+    # Adicione outros campos ou funcionalidades conforme necessário
+
+
+# Registra os modelos no admin
+admin.site.register(Account, AccountAdmin)
+admin.site.register(User, UserAdmin)
+admin.site.register(Profile)
+admin.site.register(PlantedTree, PlantedTreeAdmin)  # Registre o modelo com a classe admin
