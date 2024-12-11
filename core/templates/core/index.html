@@ -1,7 +1,24 @@
 {% extends 'global/base.html' %}
 
-{% block title %}Pagina Inicial{% endblock %}
+{% block title %} Home {% endblock %}
 
 {% block content %}
-	<h1>Pagina Inicial</h1> 
+  <div class="container">
+    <div class="hero"> 
+      <h1>Plante sua Árvore</h1>
+      <p>Faça a diferença no mundo, uma árvore de cada vez.</p>
+    </div>
+
+    <div class="button-container">
+      <a href="{% url 'plant_tree' %}" class="btn btn-success">
+        <i class="fas fa-seedling"></i> Plantar Árvore
+      </a>
+      <a href="{% url 'view_planted_trees' %}" class="btn btn-outline-success">
+        <i class="fas fa-tree"></i> Minhas Árvores
+      </a>
+      <a href="{% url 'view_account_trees' %}" class="btn btn-outline-success">
+        <i class="fas fa-globe-americas"></i> Árvores do Grupo
+      </a>
+    </div>
+  </div>
 {% endblock %}

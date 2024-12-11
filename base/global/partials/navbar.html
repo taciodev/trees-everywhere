@@ -1,35 +1,7 @@
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #77c67c;">
+<nav class="navbar navbar-light" style="background-color: #77c67c;">
     <div class="container-fluid">
-        <a class="navbar-brand text-white" href="{% url 'home' %}">
-            <i class="fas fa-seedling"></i> Plante sua Árvore
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'profile' %}">Perfil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'plant_tree' %}">Plantar Árvores</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Visualizar Árvores
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{% url 'view_planted_trees' %}">Árvores que Eu Plantei</a></li>
-                        <li><a class="dropdown-item" href="{% url 'view_account_trees' %}">Árvores do Meu Grupo</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <form method="post" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <button type="submit">Sair</button>
-                    </form>
-                </li>
-            </ul>
-        </div>
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-seedling fa-2x text-white"></i> 
+      </a>
     </div>
 </nav>
