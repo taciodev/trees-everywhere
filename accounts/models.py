@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Account(models.Model):
     """
-    Represents a user account, with information
+    Represents a user account, with information.
     """
     name = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)

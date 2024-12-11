@@ -1,7 +1,9 @@
-from django.contrib.auth.models import User
-from django.contrib.auth import forms
 from django.contrib import admin
+from django.contrib.auth import forms
+from django.contrib.auth.models import User
+
 from .models import Account, UserAccount
+
 
 class CustomUserCreationForm(forms.UserCreationForm):
     """
