@@ -1,0 +1,39 @@
+{% extends 'global/base.html' %}
+{% block title %}Plantar Árvore - Plante sua Árvore{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1 class="text-center">Plantar Uma Árvore</h1>
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">Informações da Árvore</h5>
+        </div>
+        <div class="card-body">
+          <form method="POST" action="{% url 'plant_tree' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="tree_type" class="form-label">Tipo de Árvore</label>
+              {{ form.tree }}
+            </div>
+            <div class="mb-3">
+              <label for="tree_age" class="form-label">Idade da Árvore (em anos)</label>
+              {{ form.age }}
+            </div>
+            <div class="mb-3">
+              <label for="location" class="form-label">Localização</label>
+              {{ form.location }}
+            </div>
+            <div class="mb-3">
+              <label for="account" class="form-label">Conta em que a Árvore será Plantada</label>
+              {{ form.account }}
+            </div>
+            <button type="submit" class="btn btn-success w-100">Plantar Árvore</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
