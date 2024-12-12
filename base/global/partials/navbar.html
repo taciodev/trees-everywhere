@@ -1,7 +1,11 @@
 <nav class="navbar navbar-light" style="background-color: #77c67c;">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        <i class="fas fa-seedling fa-2x text-white"></i> 
-      </a>
-    </div>
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <i class="fas fa-seedling fa-2x text-white"></i> 
+    </a>
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-link nav-link text-white">Sair</button>
+    </form>
+  </div>
 </nav>
