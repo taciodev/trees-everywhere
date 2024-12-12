@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Tree
-from accounts.models import PlantedTree, User, Account
+from accounts.models import PlantedTree, User, Account, UserAccount
 from .forms import PlantedTreeForm
 
 
@@ -19,15 +19,13 @@ def plant_tree(request):
             return redirect('view_planted_trees')
     else:
         form = PlantedTreeForm(initial={'user': request.user})
-        form.fields['account'].queryset = Account.objects.filter(users=request.user)
-    
-    tree_types = Tree.objects.values_list('name', flat=True)
-    user_accounts = request.user.accounts.all()
+        user_accounts = UserAccount.objects.filter(user=request.user).values_list('account_id', flat=True)
+        form.fields['account'].queryset = Account.objects.filter(id__in=user_accounts)
 
+    tree_types = Tree.objects.values_list('name', flat=True)
     context = {
         'form': form,
         'tree_types': tree_types,
-        'user_accounts': user_accounts,
     }
     return render(request, 'trees/plant_tree.html', context)
 
@@ -52,13 +50,20 @@ def view_account_trees(request):
 
     if account_id:
         account = get_object_or_404(Account, id=account_id)
-        account_trees = PlantedTree.objects.filter(user=request.user, account=account)
+        account_trees = PlantedTree.objects.filter(
+            user=request.user, 
+            account=account, 
+            account__in=UserAccount.objects.filter(user=request.user).values_list('account', flat=True)
+        )
     else:
         account = None
         account_trees = []
 
+    user_accounts = Account.objects.filter(
+        id__in=UserAccount.objects.filter(user=request.user).values_list('account', flat=True)
+    )
     context = {
-        'user_accounts': request.user.accounts.all(),
+        'user_accounts': user_accounts,
         'account': account,
         'account_trees': account_trees,
     }

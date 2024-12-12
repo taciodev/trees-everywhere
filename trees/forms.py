@@ -1,6 +1,5 @@
 from django import forms
-from .models import Tree
-from accounts.models import Account, PlantedTree
+from accounts.models import PlantedTree, Account
 
 class PlantedTreeForm(forms.ModelForm):
     class Meta:
@@ -8,6 +7,7 @@ class PlantedTreeForm(forms.ModelForm):
         fields = ['tree', 'age', 'location', 'account']
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        self.fields['tree'].queryset = Tree.objects.all()
-        self.fields['account'].queryset = Account.objects.all()
+        if user:
+            self.fields['account'].queryset = Account.objects.filter(users=user)
