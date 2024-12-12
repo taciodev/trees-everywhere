@@ -33,6 +33,8 @@ ALLOWED_HOSTS = [
 
 # Application definition
 
+AUTH_USER_MODEL = 'accounts.User'
+
 INSTALLED_APPS = [
     'accounts',
     'trees',
