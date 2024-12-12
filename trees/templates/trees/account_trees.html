@@ -1,0 +1,45 @@
+{% extends 'global/base.html' %}
+{% block title %}Árvores da Conta - Plante sua Árvore{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1 class="text-center">Árvores da Conta</h1>
+
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+      <form method="GET" action="{% url 'view_account_trees' %}">
+        <div class="mb-3">
+          <label for="account" class="form-label">Selecione a conta</label>
+          <select class="form-select" id="account" name="account" required>
+            <option value="" selected disabled>Escolha uma conta</option>
+            {% for account in user_accounts %}
+            <option value="{{ account.id }}" {% if account.id == selected_account.id %}selected{% endif %}>{{ account.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-success">Visualizar Árvores</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+      {% if account_trees %}
+      <ul class="list-group">
+        {% for tree in account_trees %}
+        <li class="list-group-item">
+          <h5>{{ tree.tree.name }} (Idade: {{ tree.age }} anos)</h5>
+          <p>Plantada em: {{ tree.planted_at }}</p>
+          <p>Localização: {{ tree.location }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+      {% elif account %}
+      <p class="text-center">Nenhuma árvore foi plantada nesta conta ainda.</p>
+      {% else %}
+      <p class="text-center">Selecione uma conta para visualizar as árvores.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
