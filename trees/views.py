@@ -1,14 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Tree
-from accounts.models import PlantedTree, User, Account, UserAccount
-from .forms import PlantedTreeForm
 
+from accounts.models import UserAccount, Account
+from .models import Tree
+from .repositories import PlantedTreeRepository
+from .forms import PlantedTreeForm
 
 @login_required
 def plant_tree(request):
     """
-    View to plant a tree.
+    View to handle planting a new tree.
     """
     if request.method == 'POST':
         form = PlantedTreeForm(request.POST)
@@ -33,10 +34,10 @@ def plant_tree(request):
 @login_required
 def view_planted_trees(request):
     """
-    View to show the planted trees.
+    View to display the trees planted by the logged-in user.
     """
-    user = User.objects.get(username=request.user)
-    my_trees = PlantedTree.objects.filter(user=user)
+    repository = PlantedTreeRepository()
+    my_trees = repository.get_trees_by_user(request.user)
     context = {'my_trees': my_trees}
     return render(request, 'trees/planted_trees.html', context)
 
@@ -44,24 +45,19 @@ def view_planted_trees(request):
 @login_required
 def view_account_trees(request):
     """
-    View to show the user's account trees.
+    View to display trees planted within a specific account.
     """
+    repository = PlantedTreeRepository()
+    
     account_id = request.GET.get('account')
-
     if account_id:
         account = get_object_or_404(Account, id=account_id)
-        account_trees = PlantedTree.objects.filter(
-            user=request.user, 
-            account=account, 
-            account__in=UserAccount.objects.filter(user=request.user).values_list('account', flat=True)
-        )
+        account_trees = repository.get_trees_by_user_and_account(request.user, account)
     else:
         account = None
         account_trees = []
 
-    user_accounts = Account.objects.filter(
-        id__in=UserAccount.objects.filter(user=request.user).values_list('account', flat=True)
-    )
+    user_accounts = repository.get_accounts_by_user(request.user)
     context = {
         'user_accounts': user_accounts,
         'account': account,
