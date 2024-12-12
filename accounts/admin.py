@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Account, User, Profile
+
+from .models import Account, User, Profile, UserAccount
 from accounts.models import PlantedTree
 
+
 class AccountAdmin(admin.ModelAdmin):
-    """
-    Interface admin to manage the Account model.
-    """
+    """Interface admin to manage the Account model."""
+
     list_display = ('name', 'created', 'active')
     list_filter = ('active',)
     actions = ['activate_accounts', 'deactivate_accounts']
@@ -19,19 +20,25 @@ class AccountAdmin(admin.ModelAdmin):
         queryset.update(active=False)
     deactivate_accounts.short_description = "Desativar contas selecionadas"
 
+
+class UserAccountInline(admin.TabularInline):
+    """Relationship between User and Account."""
+
+    model = UserAccount
+    extra = 1
+
+
 class UserAdmin(BaseUserAdmin):
-    """
-    Interface admin to manage the User model.
-    """
+    """Interface admin to manage the User model."""
+
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
-    filter_horizontal = ('accounts',)
+    inlines = (UserAccountInline,)
 
 
 class PlantedTreeAdmin(admin.ModelAdmin):
-    """
-    Interface admin to manage the PlantedTree model.
-    """
-    list_display = ('tree', 'user', 'account', 'age', 'location', 'planted_at')  
+    """Interface admin to manage the PlantedTree model."""
+
+    list_display = ('tree', 'user', 'account', 'age', 'location', 'planted_at')
 
 
 admin.site.register(Account, AccountAdmin)
