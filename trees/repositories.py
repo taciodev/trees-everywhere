@@ -1,4 +1,18 @@
 from accounts.models import UserAccount, Account, PlantedTree
+from .models import Tree
+
+
+class TreeRepository:
+    """
+    Repository for managing Tree objects.
+    """
+
+    def get_tree_names(self):
+        """
+        Retrieves a list of tree names.
+        """
+        return Tree.objects.values_list('name', flat=True)
+
 
 class PlantedTreeRepository:
 
@@ -25,3 +39,9 @@ class PlantedTreeRepository:
         return Account.objects.filter(
             id__in=UserAccount.objects.filter(user=user).values_list('account', flat=True)
         )
+    
+    def save(self, planted_tree):
+        """
+        Saves a PlantedTree object to the database.
+        """
+        planted_tree.save()
