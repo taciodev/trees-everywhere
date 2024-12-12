@@ -1,66 +1,74 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
+from django.views.generic import CreateView, ListView
 
-from accounts.models import UserAccount, Account
+from accounts.models import Account, PlantedTree
 from .models import Tree
 from .repositories import PlantedTreeRepository
 from .forms import PlantedTreeForm
 
-@login_required
-def plant_tree(request):
-    """
-    View to handle planting a new tree.
-    """
-    if request.method == 'POST':
-        form = PlantedTreeForm(request.POST)
-        if form.is_valid():
-            tree = form.save(commit=False)
-            tree.user = request.user
-            tree.save()
-            return redirect('view_planted_trees')
-    else:
-        form = PlantedTreeForm(initial={'user': request.user})
-        user_accounts = UserAccount.objects.filter(user=request.user).values_list('account_id', flat=True)
-        form.fields['account'].queryset = Account.objects.filter(id__in=user_accounts)
 
-    tree_types = Tree.objects.values_list('name', flat=True)
-    context = {
-        'form': form,
-        'tree_types': tree_types,
-    }
-    return render(request, 'trees/plant_tree.html', context)
+class PlantTreeView(LoginRequiredMixin, CreateView):
+    """View to handle planting a new tree."""
+    model = PlantedTree
+    form_class = PlantedTreeForm
+    template_name = 'trees/plant_tree.html'
+    success_url = '/trees'
+
+    def get_initial(self):
+        """Set initial values for the form."""
+        initial = super().get_initial()
+        initial['user'] = self.request.user.id
+        return initial
+
+    def form_valid(self, form):
+        """Set the user before saving the form."""
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        """Add tree types to the context."""
+        context = super().get_context_data(**kwargs)
+        context['tree_types'] = Tree.objects.values_list('name', flat=True)
+        return context
 
 
-@login_required
-def view_planted_trees(request):
+class ViewPlantedTreesView(LoginRequiredMixin, ListView):
     """
     View to display the trees planted by the logged-in user.
     """
-    repository = PlantedTreeRepository()
-    my_trees = repository.get_trees_by_user(request.user)
-    context = {'my_trees': my_trees}
-    return render(request, 'trees/planted_trees.html', context)
+    model = PlantedTree
+    template_name = 'trees/planted_trees.html'
+    context_object_name = 'my_trees'
+
+    def get_queryset(self):
+        """Return the trees planted by the logged-in user."""
+        repository = PlantedTreeRepository()
+        return repository.get_trees_by_user(self.request.user)
 
 
-@login_required
-def view_account_trees(request):
+class ViewAccountTreesView(LoginRequiredMixin, ListView):
     """
     View to display trees planted within a specific account.
     """
-    repository = PlantedTreeRepository()
-    
-    account_id = request.GET.get('account')
-    if account_id:
-        account = get_object_or_404(Account, id=account_id)
-        account_trees = repository.get_trees_by_user_and_account(request.user, account)
-    else:
-        account = None
-        account_trees = []
+    model = PlantedTree
+    template_name = 'trees/account_trees.html'
+    context_object_name = 'account_trees'
 
-    user_accounts = repository.get_accounts_by_user(request.user)
-    context = {
-        'user_accounts': user_accounts,
-        'account': account,
-        'account_trees': account_trees,
-    }
-    return render(request, 'trees/account_trees.html', context)
+    def get_queryset(self):
+        """Return the trees planted by the user within the selected account."""
+        repository = PlantedTreeRepository()
+        account_id = self.request.GET.get('account')
+        if account_id:
+            account = get_object_or_404(Account, id=account_id)
+            return repository.get_trees_by_user_and_account(self.request.user, account)
+        else:
+            return PlantedTree.objects.none()
+
+    def get_context_data(self, **kwargs):
+        """Add user accounts and selected account to the context."""
+        context = super().get_context_data(**kwargs)
+        repository = PlantedTreeRepository()
+        context['user_accounts'] = repository.get_accounts_by_user(self.request.user)
+        context['account_id'] = self.request.GET.get('account')
+        return context

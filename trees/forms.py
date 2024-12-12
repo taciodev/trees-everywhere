@@ -1,5 +1,9 @@
 from django import forms
-from accounts.models import PlantedTree, Account
+from django.contrib.auth import get_user_model
+
+from accounts.models import Account, PlantedTree, UserAccount
+
+User = get_user_model()
 
 class PlantedTreeForm(forms.ModelForm):
     class Meta:
@@ -7,7 +11,8 @@ class PlantedTreeForm(forms.ModelForm):
         fields = ['tree', 'age', 'location', 'account']
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        if user:
-            self.fields['account'].queryset = Account.objects.filter(users=user)
+        user_id = self.initial.get('user')
+        if user_id:
+            user_accounts = UserAccount.objects.filter(user_id=user_id).values_list('account', flat=True)
+            self.fields['account'].queryset = Account.objects.filter(id__in=user_accounts)

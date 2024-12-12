@@ -1,15 +1,12 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 
-def register(request):
-    """
-    Register a new user
-    """
-    return render(request, 'accounts/register.html')
 
-@login_required
-def profile(request):
-    """
-    Display the user's profile
-    """
-    return render(request, 'accounts/profile.html')
+class RegisterView(TemplateView):
+    """Register a new user."""
+    template_name = 'accounts/register.html'
+
+
+class ProfileView(LoginRequiredMixin, TemplateView):
+    """Display the user's profile."""
+    template_name = 'accounts/profile.html'

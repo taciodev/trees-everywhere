@@ -1,6 +1,7 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 
-@login_required
-def core(request):
-    return render(request, 'core/index.html')
+
+class CoreView(LoginRequiredMixin, TemplateView):
+    """Render the core page."""
+    template_name = 'core/index.html'
