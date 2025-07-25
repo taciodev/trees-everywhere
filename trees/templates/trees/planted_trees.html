@@ -2,25 +2,29 @@
 {% block title %}Minhas Árvores - Plante sua Árvore{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h1 class="text-center">Minhas Árvores</h1>
+<div class="container py-5">
+  <h1 class="text-center text-success mb-4">Minhas Árvores</h1>
 
-  <div class="row justify-content-center mt-4">
-    <div class="col-md-8">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+
       {% if my_trees %}
-      <ul class="list-group">
-        {% for tree in my_trees %}
-        <li class="list-group-item">
-          <h5>{{ tree.tree.name }} (Idade: {{ tree.age }} anos)</h5>
-          <p>Plantada em: {{ tree.planted_at }}</p>
-          <p>Localização: {{ tree.location }}</p>
-          <p>Conta: {{ tree.account.name }}</p>
-        </li>
-        {% endfor %}
-      </ul>
+        <div class="list-group">
+          {% for tree in my_trees %}
+          <div class="list-group-item shadow-sm mb-3 rounded">
+            <h5 class="fw-bold mb-1">
+              🌳 {{ tree.tree.name }} <small class="text-muted">(Idade: {{ tree.age }} anos)</small>
+            </h5>
+            <p class="mb-1"><strong>Plantada em:</strong> {{ tree.planted_at|date:"d/m/Y H:i" }}</p>
+            <p class="mb-1"><strong>Localização:</strong> {{ tree.location }}</p>
+            <p class="mb-0"><strong>Conta:</strong> {{ tree.account.name }}</p>
+          </div>
+          {% endfor %}
+        </div>
       {% else %}
-      <p class="text-center">Você ainda não plantou nenhuma árvore.</p>
+        <p class="text-center text-muted">🌱 Você ainda não plantou nenhuma árvore.</p>
       {% endif %}
+
     </div>
   </div>
 </div>

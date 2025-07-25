@@ -2,37 +2,54 @@
 {% block title %}Plantar Árvore - Plante sua Árvore{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h1 class="text-center">Plantar Uma Árvore</h1>
-  <div class="row justify-content-center mt-4">
-    <div class="col-md-6">
+<div class="container py-5">
+  <h1 class="text-center text-success mb-4">Plantar Uma Árvore</h1>
+
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-6">
+
       <div class="card shadow-sm">
-        <div class="card-header bg-success text-white">
+        <div class="card-header bg-success text-white text-center">
           <h5 class="mb-0">Informações da Árvore</h5>
         </div>
+
         <div class="card-body">
           <form method="POST" action="{% url 'plant_tree' %}">
             {% csrf_token %}
+
             <div class="mb-3">
-              <label for="tree_type" class="form-label">Tipo de Árvore</label>
+              <label for="tree" class="form-label fw-semibold">Tipo de Árvore</label>
               {{ form.tree }}
             </div>
+
             <div class="mb-3">
-              <label for="tree_age" class="form-label">Idade da Árvore (em anos)</label>
+              <label for="age" class="form-label fw-semibold">Idade da Árvore (em anos)</label>
               {{ form.age }}
             </div>
+
             <div class="mb-3">
-              <label for="location" class="form-label">Localização</label>
-              {{ form.location }}
+              <label for="latitude" class="form-label fw-semibold">Latitude</label>
+              {{ form.latitude }}
             </div>
+
             <div class="mb-3">
-              <label for="account" class="form-label">Conta em que a Árvore será Plantada</label>
+              <label for="longitude" class="form-label fw-semibold">Longitude</label>
+              {{ form.longitude }}
+            </div>
+
+            <div class="mb-4">
+              <label for="account" class="form-label fw-semibold">Conta para Plantio</label>
               {{ form.account }}
             </div>
-            <button type="submit" class="btn btn-success w-100">Plantar Árvore</button>
+
+            <button type="submit" class="btn btn-success w-100">
+              <i class="fas fa-tree"></i> Plantar Árvore
+            </button>
+
           </form>
         </div>
       </div>
+
     </div>
   </div>
 </div>

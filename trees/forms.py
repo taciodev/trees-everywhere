@@ -5,14 +5,31 @@ from accounts.models import Account, PlantedTree, UserAccount
 
 User = get_user_model()
 
+
 class PlantedTreeForm(forms.ModelForm):
     class Meta:
         model = PlantedTree
-        fields = ['tree', 'age', 'account']
+        fields = ["tree", "age", "account", "latitude", "longitude"]
+        widgets = {
+            "tree": forms.Select(attrs={"class": "form-select"}),
+            "age": forms.NumberInput(attrs={"class": "form-control", "min": "0"}),
+            "account": forms.Select(attrs={"class": "form-select"}),
+            "latitude": forms.NumberInput(
+                attrs={"class": "form-control", "step": "0.000001"}
+            ),
+            "longitude": forms.NumberInput(
+                attrs={"class": "form-control", "step": "0.000001"}
+            ),
+        }
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)  # Melhor que usar self.initial
         super().__init__(*args, **kwargs)
-        user_id = self.initial.get('user')
-        if user_id:
-            user_accounts = UserAccount.objects.filter(user_id=user_id).values_list('account', flat=True)
-            self.fields['account'].queryset = Account.objects.filter(id__in=user_accounts)
+
+        if user:
+            user_accounts = UserAccount.objects.filter(user=user).values_list(
+                "account", flat=True
+            )
+            self.fields["account"].queryset = Account.objects.filter(
+                id__in=user_accounts
+            )

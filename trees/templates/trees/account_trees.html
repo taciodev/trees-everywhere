@@ -2,42 +2,52 @@
 {% block title %}Árvores da Conta - Plante sua Árvore{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h1 class="text-center">Árvores da Conta</h1>
+<div class="container py-5">
+  <h1 class="text-center text-success mb-4">Árvores da Conta</h1>
 
-  <div class="row justify-content-center mt-4">
-    <div class="col-md-6">
-      <form method="GET" action="{% url 'view_account_trees' %}">
+  <!-- Formulário de seleção de conta -->
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <form method="GET" action="{% url 'view_account_trees' %}" class="bg-light p-4 rounded shadow-sm">
         <div class="mb-3">
-          <label for="account" class="form-label">Selecione a conta</label>
+          <label for="account" class="form-label fw-semibold">Selecione a conta</label>
           <select class="form-select" id="account" name="account" required>
             <option value="" selected disabled>Escolha uma conta</option>
             {% for account in user_accounts %}
-            <option value="{{ account.id }}" {% if account.id == selected_account.id %}selected{% endif %}>{{ account.name }}</option>
+              <option value="{{ account.id }}" {% if account.id == selected_account.id %}selected{% endif %}>
+                {{ account.name }}
+              </option>
             {% endfor %}
           </select>
         </div>
-        <button type="submit" class="btn btn-success">Visualizar Árvores</button>
+        <div class="text-end">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-search"></i> Visualizar Árvores
+          </button>
+        </div>
       </form>
     </div>
   </div>
 
-  <div class="row justify-content-center mt-4">
-    <div class="col-md-8">
+  <!-- Lista de árvores -->
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-10 col-lg-8">
       {% if account_trees %}
-      <ul class="list-group">
-        {% for tree in account_trees %}
-        <li class="list-group-item">
-          <h5>{{ tree.tree.name }} (Idade: {{ tree.age }} anos)</h5>
-          <p>Plantada em: {{ tree.planted_at }}</p>
-          <p>Localização: {{ tree.location }}</p>
-        </li>
-        {% endfor %}
-      </ul>
+        <div class="list-group">
+          {% for tree in account_trees %}
+          <div class="list-group-item shadow-sm mb-3 rounded">
+            <h5 class="fw-bold mb-1">
+              🌳 {{ tree.tree.name }} <small class="text-muted">(Idade: {{ tree.age }} anos)</small>
+            </h5>
+            <p class="mb-1"><strong>Plantada em:</strong> {{ tree.planted_at|date:"d/m/Y H:i" }}</p>
+            <p class="mb-0"><strong>Localização:</strong> {{ tree.location }}</p>
+          </div>
+          {% endfor %}
+        </div>
       {% elif account %}
-      <p class="text-center">Nenhuma árvore foi plantada nesta conta ainda.</p>
+        <p class="text-center text-muted">🌱 Nenhuma árvore foi plantada nesta conta ainda.</p>
       {% else %}
-      <p class="text-center">Selecione uma conta para visualizar as árvores.</p>
+        <p class="text-center text-muted">Selecione uma conta para visualizar as árvores.</p>
       {% endif %}
     </div>
   </div>
