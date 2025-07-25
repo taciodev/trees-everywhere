@@ -8,7 +8,7 @@ User = get_user_model()
 class PlantedTreeForm(forms.ModelForm):
     class Meta:
         model = PlantedTree
-        fields = ['tree', 'age', 'location', 'account']
+        fields = ['tree', 'age', 'account']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
