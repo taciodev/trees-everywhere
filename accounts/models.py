@@ -1,9 +1,5 @@
-from decimal import Decimal
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from trees.models import Tree
-
-from trees.repositories import PlantedTreeRepository
+from users.models import User
 
 
 class Account(models.Model):
@@ -21,24 +17,6 @@ class Account(models.Model):
         return self.name
 
 
-class User(AbstractUser):
-    """A custom user model that extends the AbstractUser model."""
-
-    accounts = models.ManyToManyField(
-        Account, through="UserAccount", related_name="users"
-    )
-
-    def plant_tree(self, tree: Tree, location: tuple[Decimal, Decimal]):
-        """Plant a tree."""
-        PlantedTreeRepository.create_planted_tree(self, tree, location)
-
-    def plant_trees(self, plants: list[tuple[Tree, tuple[Decimal, Decimal]]]):
-        """Plant multiple trees."""
-
-        for tree, location in plants:
-            self.plant_tree(tree, location)
-
-
 class UserAccount(models.Model):
     """Relationship between User and Account."""
 
@@ -47,18 +25,3 @@ class UserAccount(models.Model):
 
     class Meta:
         unique_together = ("user", "account")
-
-
-class Profile(models.Model):
-    """A model to represent a user profile."""
-
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    about = models.TextField(blank=True)
-    joined = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        verbose_name = "Perfil"
-        verbose_name_plural = "Perfis"
-
-    def __str__(self):
-        return self.user.username

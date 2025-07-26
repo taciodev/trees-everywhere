@@ -1,7 +1,5 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
-from .models import Account, User, Profile, UserAccount
+from .models import Account, UserAccount
 
 
 @admin.register(Account)
@@ -22,36 +20,3 @@ class AccountAdmin(admin.ModelAdmin):
         queryset.update(active=False)
 
     deactivate_accounts.short_description = "Desativar contas selecionadas"
-
-
-class UserAccountInline(admin.TabularInline):
-    """Relationship between User and Account."""
-
-    model = UserAccount
-    extra = 1
-
-
-@admin.register(User)
-class UserAdmin(BaseUserAdmin):
-    """Interface admin to manage the User model."""
-
-    list_display = ("username", "email", "is_staff", "is_active")
-    list_filter = ("is_staff", "is_active", "is_superuser")
-    search_fields = ("username", "email")
-
-    fieldsets = (
-        (None, {"fields": ("username", "email", "password")}),
-        ("Permissões", {"fields": ("is_active", "is_staff", "is_superuser")}),
-        ("Datas importantes", {"fields": ("last_login", "date_joined")}),
-    )
-    readonly_fields = ("last_login", "date_joined")
-
-    inlines = (UserAccountInline,)
-
-
-@admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
-    """Interface admin to manage the Profile model."""
-
-    list_display = ("user",)
-    search_fields = ("user__username",)

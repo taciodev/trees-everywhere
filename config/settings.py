@@ -24,7 +24,7 @@ DATA_DIR = BASE_DIR / 'data' / 'web'
 SECRET_KEY = os.getenv('SECRET_KEY', 'CHANGE-ME')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.getenv('DEBUG', '0')))
+DEBUG = os.getenv('DEBUG', 'true') == 'true'
 
 ALLOWED_HOSTS = [
     h.strip() for h in os.getenv('ALLOWED_HOSTS', '').split(',')
@@ -33,9 +33,10 @@ ALLOWED_HOSTS = [
 
 # Application definition
 
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'users.User'
 
 INSTALLED_APPS = [
+		'users',
     'accounts',
     'trees',
     'core',
@@ -85,12 +86,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
-        'NAME': os.getenv('POSTGRES_DB', 'CHANGE-ME'),
-        'USER': os.getenv('POSTGRES_USER', 'CHANGE-ME'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'CHANGE-ME'),
-        'HOST': os.getenv('POSTGRES_HOST', 'CHANGE-ME'),
-        'PORT': os.getenv('POSTGRES_PORT', 'CHANGE-ME'),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": "db.sqlite3",
     }
 }
 
