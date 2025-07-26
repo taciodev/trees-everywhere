@@ -2,10 +2,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView, ListView
 
+from trees.models import PlantedTree
 from accounts.models import Account
 from .repositories import PlantedTreeRepository, TreeRepository
 from .forms import PlantedTreeForm
-from .models import PlantedTree
 
 
 class PlantTreeView(LoginRequiredMixin, CreateView):

@@ -2,6 +2,8 @@ from django.db import models
 
 
 class Tree(models.Model):
+    """A model to represent a tree."""
+
     name = models.CharField(max_length=255)
     scientific_name = models.CharField(max_length=255)
 
@@ -18,7 +20,7 @@ class PlantedTree(models.Model):
 
     age = models.IntegerField(default=0)
     planted_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey("accounts.User", on_delete=models.CASCADE)
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
     tree = models.ForeignKey(Tree, on_delete=models.CASCADE)
     account = models.ForeignKey("accounts.Account", on_delete=models.CASCADE)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, default="0.0")

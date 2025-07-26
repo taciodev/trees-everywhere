@@ -2,29 +2,33 @@ from .models import Tree, PlantedTree
 
 
 class TreeRepository:
-    """
-    Repository for managing Tree objects.
-    """
+    """Repository for managing Tree objects."""
 
     def get_tree_names(self):
-        """
-        Retrieves a list of tree names.
-        """
+        """Retrieves a list of tree names."""
         return Tree.objects.values_list("name", flat=True)
 
 
 class PlantedTreeRepository:
+    @staticmethod
+    def create_planted_tree(user, tree, location, account):
+        """Creates a PlantedTree object and saves it to the database."""
+        planted_tree = PlantedTree(
+            user=user,
+            tree=tree,
+            account=account,
+            latitude=location[0],
+            longitude=location[1],
+        )
+        planted_tree.save()
+        return planted_tree
 
     def get_trees_by_user(self, user):
-        """
-        Return trees planted by the user.
-        """
+        """Return trees planted by the user."""
         return PlantedTree.objects.filter(user=user)
 
     def get_trees_by_user_and_account(self, user, account):
-        """
-        Return trees planted by the user in a specific account.
-        """
+        """Return trees planted by the user in a specific account."""
         from accounts.models import UserAccount
 
         return PlantedTree.objects.filter(
@@ -36,9 +40,7 @@ class PlantedTreeRepository:
         )
 
     def get_accounts_by_user(self, user):
-        """
-        Return accounts associated with the user.
-        """
+        """Return accounts associated with the user."""
         from accounts.models import UserAccount, Account
 
         return Account.objects.filter(
@@ -48,7 +50,5 @@ class PlantedTreeRepository:
         )
 
     def save(self, planted_tree):
-        """
-        Saves a PlantedTree object to the database.
-        """
+        """Saves a PlantedTree object to the database."""
         planted_tree.save()

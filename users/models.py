@@ -1,5 +1,5 @@
 from decimal import Decimal
-from typing import Tuple, List
+from typing import Tuple
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -13,14 +13,17 @@ class User(AbstractUser):
         "accounts.Account", through="accounts.UserAccount", related_name="users"
     )
 
-    def plant_tree(self, tree: Tree, location: Tuple[Decimal, Decimal]):
+    def plant_tree(self, tree: Tree, location: Tuple[Decimal, Decimal], account):
         from trees.repositories import PlantedTreeRepository
 
-        PlantedTreeRepository.create_planted_tree(self, tree, location)
+        return PlantedTreeRepository.create_planted_tree(self, tree, location, account)
 
-    def plant_trees(self, plants: List[Tuple[Tree, Tuple[Decimal, Decimal]]]):
-        for tree, location in plants:
-            self.plant_tree(tree, location)
+    def plant_trees(self, plants):
+        list_of_planted_trees = []
+        for tree, location, account in plants:
+            planted = self.plant_tree(tree, location, account)
+            list_of_planted_trees.append(planted)
+        return list_of_planted_trees
 
 
 class Profile(models.Model):

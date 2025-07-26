@@ -3,9 +3,7 @@ from .models import Tree, PlantedTree
 
 
 class PlantedTreeInline(admin.TabularInline):
-    """
-    Inline edition of PlantedTree instances.
-    """
+    """Inline edition of PlantedTree instances."""
 
     model = PlantedTree
     extra = 0
@@ -15,9 +13,7 @@ class PlantedTreeInline(admin.TabularInline):
 
 @admin.register(Tree)
 class TreeAdmin(admin.ModelAdmin):
-    """
-    Admin page for Tree instances.
-    """
+    """Admin page for Tree instances."""
 
     inlines = [PlantedTreeInline]
 
