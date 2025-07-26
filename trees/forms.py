@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-from accounts.models import Account, PlantedTree, UserAccount
+from accounts.models import Account, UserAccount
+from .models import PlantedTree
 
 User = get_user_model()
 

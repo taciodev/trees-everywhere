@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Tree
-from accounts.models import PlantedTree
+from .models import Tree, PlantedTree
 
 
 class PlantedTreeInline(admin.TabularInline):
@@ -14,6 +13,7 @@ class PlantedTreeInline(admin.TabularInline):
     readonly_fields = ("user", "account")
 
 
+@admin.register(Tree)
 class TreeAdmin(admin.ModelAdmin):
     """
     Admin page for Tree instances.
@@ -27,4 +27,14 @@ class TreeAdmin(admin.ModelAdmin):
     planted_trees.short_description = "Plantadas por"
 
 
-admin.site.register(Tree, TreeAdmin)
+@admin.register(PlantedTree)
+class PlantedTreeAdmin(admin.ModelAdmin):
+    """Interface admin to manage the PlantedTree model."""
+
+    list_display = ("tree", "user", "account", "age", "planted_at", "get_location")
+    search_fields = ("tree__name", "user__username", "account__name")
+
+    def get_location(self, obj):
+        return obj.location
+
+    get_location.short_description = "Localização"
