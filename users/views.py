@@ -5,10 +5,10 @@ from django.views.generic import TemplateView
 class RegisterView(TemplateView):
     """Register a new user."""
 
-    template_name = "accounts/register.html"
+    template_name = "users/register.html"
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     """Display the user's profile."""
 
-    template_name = "accounts/profile.html"
+    template_name = "users/profile.html"

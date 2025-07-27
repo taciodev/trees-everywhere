@@ -22,12 +22,14 @@ class PlantedTreeRepository:
         )
         planted_tree.save()
         return planted_tree
-
-    def get_trees_by_user(self, user):
+    
+    @staticmethod
+    def get_trees_by_user(user):
         """Return trees planted by the user."""
         return PlantedTree.objects.filter(user=user)
 
-    def get_trees_by_user_and_account(self, user, account):
+    @staticmethod
+    def get_trees_by_user_and_account(user, account):
         """Return trees planted by the user in a specific account."""
         from accounts.models import UserAccount
 
