@@ -1,5 +1,4 @@
 from django.db import models
-from users.models import User
 
 
 class Account(models.Model):
@@ -20,7 +19,7 @@ class Account(models.Model):
 class UserAccount(models.Model):
     """Relationship between User and Account."""
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
 
     class Meta:

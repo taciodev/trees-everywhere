@@ -1,4 +1,5 @@
 from .models import Tree, PlantedTree
+from accounts.models import Account, UserAccount
 
 
 class TreeRepository:
@@ -22,7 +23,7 @@ class PlantedTreeRepository:
         )
         planted_tree.save()
         return planted_tree
-    
+
     @staticmethod
     def get_trees_by_user(user):
         """Return trees planted by the user."""
@@ -31,7 +32,6 @@ class PlantedTreeRepository:
     @staticmethod
     def get_trees_by_user_and_account(user, account):
         """Return trees planted by the user in a specific account."""
-        from accounts.models import UserAccount
 
         return PlantedTree.objects.filter(
             user=user,
@@ -43,8 +43,6 @@ class PlantedTreeRepository:
 
     def get_accounts_by_user(self, user):
         """Return accounts associated with the user."""
-        from accounts.models import UserAccount, Account
-
         return Account.objects.filter(
             id__in=UserAccount.objects.filter(user=user).values_list(
                 "account", flat=True
