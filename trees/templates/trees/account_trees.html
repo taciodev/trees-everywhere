@@ -5,7 +5,6 @@
 <div class="container py-5">
   <h1 class="text-center text-success mb-4">Árvores da Conta</h1>
 
-  <!-- Formulário de seleção de conta -->
   <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
       <form method="GET" action="{% url 'view_account_trees' %}" class="bg-light p-4 rounded shadow-sm">
@@ -29,7 +28,6 @@
     </div>
   </div>
 
-  <!-- Lista de árvores -->
   <div class="row justify-content-center mt-5">
     <div class="col-md-10 col-lg-8">
       {% if account_trees %}

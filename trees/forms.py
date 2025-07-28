@@ -24,7 +24,7 @@ class PlantedTreeForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop("user", None)  # Melhor que usar self.initial
+        user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
         if user:
