@@ -1,6 +1,18 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from accounts.models import UserAccount
 from .models import User, Profile
+
+
+class ReadOnlyUserAccountInline(admin.TabularInline):
+    model = UserAccount
+    extra = 0
+    can_delete = False
+    verbose_name = "Conta"
+    verbose_name_plural = "Contas"
+    fields = ("account",)
+    readonly_fields = ("account",)
+    show_change_link = False
 
 
 @admin.register(User)
@@ -10,6 +22,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = ("username", "email", "is_staff", "is_active")
     list_filter = ("is_staff", "is_active", "is_superuser")
     search_fields = ("username", "email")
+    inlines = [ReadOnlyUserAccountInline]
 
     fieldsets = (
         (None, {"fields": ("username", "email", "password")}),
