@@ -21,9 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY . .
 
 RUN useradd --no-create-home duser && \
-    mkdir -p /data/web/static /data/web/media && \
-    chown -R duser:duser /app /data/web/static /data/web/media && \
-    chmod -R 700 /data/web/static /data/web/media && \
+    chown -R duser:duser /app && \
     chmod +x /app/scripts/commands.sh
 
 USER duser
