@@ -1,8 +1,8 @@
 from django.test import TestCase
 
 from accounts.models import Account
-from trees.models import PlantedTree, Tree
-from .models import User
+from trees.models import Tree, PlantedTree
+from users.models import User
 
 
 class UserTestCase(TestCase):
